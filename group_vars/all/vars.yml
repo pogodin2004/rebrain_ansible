@@ -1,0 +1,14 @@
+# Nginx
+nginx_conf_path: "/etc/nginx/sites-available/joomla.conf"
+nginx_symlink_path: "/etc/nginx/sites-enabled/joomla.conf"
+
+# PHP
+php_version: "8.1"
+
+# MySQL
+mysql_user: "admin"
+mysql_user_privileges: "*.*:ALL"
+
+# Joomla
+joomla_version: "5-1-4"
+joomla_install_dir: "/var/www/sites/joomla"

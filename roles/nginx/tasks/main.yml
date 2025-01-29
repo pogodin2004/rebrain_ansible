@@ -1,0 +1,31 @@
+---
+- name: Install Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+  notify: restart nginx
+
+- name: Deploy Nginx config
+  ansible.builtin.template:
+    src: joomla.conf.j2
+    dest: "{{ nginx_conf_path }}"
+  notify: reload nginx
+
+- name: Enable site configuration
+  ansible.builtin.file:
+    src: "{{ nginx_conf_path }}"
+    dest: "{{ nginx_symlink_path }}"
+    state: link
+  notify: reload nginx
+
+- name: Remove default site
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: reload nginx
+
+- name: Validate Nginx configuration
+  ansible.builtin.command: nginx -t
+  register: nginx_test
+  changed_when: false
+  notify: Reload Nginx

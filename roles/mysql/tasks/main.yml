@@ -1,0 +1,38 @@
+---
+- name: Set MySQL root password via debconf
+  ansible.builtin.shell: |
+    echo "mysql-server mysql-server/root_password password {{ mysql_root_password }}" | debconf-set-selections
+    echo "mysql-server mysql-server/root_password_again password {{ mysql_root_password }}" | debconf-set-selections
+  become: yes
+  no_log: true  # Скрывает пароль в логах
+
+- name: Install MySQL Server
+  ansible.builtin.apt:
+    name: mysql-server
+    state: latest
+    update_cache: yes
+  notify: Start MySQL
+
+- name: Ensure MySQL is started and enabled
+  ansible.builtin.service:
+    name: mysql
+    state: started
+    enabled: yes
+
+- name: Create MySQL User
+  mysql_user:
+    name: "{{ mysql_user }}"
+    password: "{{ mysql_user_password }}"
+    priv: "{{ mysql_user_privileges }}"
+    state: present
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+
+- name: Test MySQL connection
+  community.mysql.mysql_query:
+    login_user: "{{ mysql_user }}"
+    login_password: "{{ mysql_user_password }}"
+    query: "SHOW DATABASES"
+  register: test_db
+  failed_when: "test_db.failed"
+  changed_when: false

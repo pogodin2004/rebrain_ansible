@@ -1,0 +1,31 @@
+---
+- name: Add PHP repository
+  ansible.builtin.apt_repository:
+    repo: ppa:ondrej/php
+    state: present
+
+- name: Install PHP packages
+  ansible.builtin.apt:
+    name:
+      - php{{ php_version }}
+      - php{{ php_version }}-fpm
+      - php{{ php_version }}-mysql
+      - php{{ php_version }}-curl
+      - php{{ php_version }}-gd
+      - php{{ php_version }}-mbstring
+      - php{{ php_version }}-xml
+      - php{{ php_version }}-zip
+    state: latest
+    update_cache: yes
+
+- name: Ensure PHP-FPM is running
+  ansible.builtin.service:
+    name: php{{ php_version }}-fpm
+    state: restarted
+    enabled: yes
+
+- name: Configure PHP settings
+  ansible.builtin.template:
+    src: php-config.j2
+    dest: /etc/php/{{ php_version }}/fpm/conf.d/99-custom.ini
+  notify: Restart PHP-FPM

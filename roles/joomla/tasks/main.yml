@@ -1,0 +1,28 @@
+---
+- name: Install Unzip
+  ansible.builtin.apt:
+    name: unzip
+    state: present
+
+- name: Download Joomla
+  ansible.builtin.get_url:
+    url: "https://downloads.joomla.org/cms/joomla5/{{ joomla_version }}/Joomla_{{ joomla_version }}-Stable-Full_Package.zip"
+    dest: /tmp/joomla.zip
+
+- name: Extract Joomla
+  ansible.builtin.unarchive:
+    src: /tmp/joomla.zip
+    dest: "{{ joomla_install_dir }}"
+    remote_src: yes
+    owner: www-data
+    group: www-data
+
+- name: Cleanup Joomla zip
+  ansible.builtin.file:
+    path: /tmp/joomla.zip
+    state: absent
+
+- name: Reload nginx after all
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded

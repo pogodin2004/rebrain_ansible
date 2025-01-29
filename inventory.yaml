@@ -1,0 +1,10 @@
+all:
+  hosts:
+    web01:
+      ansible_host: <...>
+      ansible_user: <...>
+      ansible_password: <...>
+  children:
+    webservers:
+      hosts:
+        web01:

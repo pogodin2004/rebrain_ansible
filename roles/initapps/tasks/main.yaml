@@ -1,0 +1,25 @@
+---
+- name: Create web directory
+  ansible.builtin.file:
+    path: "{{ joomla_install_dir }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Set permissions recursively
+  ansible.builtin.file:
+    path: "{{ joomla_install_dir }}"
+    state: directory
+    recurse: yes
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Create PHP session directory
+  ansible.builtin.file:
+    path: /var/lib/php/sessions
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '1733'
