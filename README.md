@@ -6,4 +6,10 @@ ansible-playbook -i inventory.yaml playbook.yml --ask-vault-pass
 хоста, вводим название компании, логин-пароль администратора, имя пользователя 
 и пароль к базе данных.
 
+Проверка ansible-lint:
 
+![lint](./ansible-lint.png)
+
+Проверка создания сайта:
+
+![web](./result.png)
