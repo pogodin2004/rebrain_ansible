@@ -8,12 +8,13 @@
   ansible.builtin.get_url:
     url: "https://downloads.joomla.org/cms/joomla5/{{ joomla_version }}/Joomla_{{ joomla_version }}-Stable-Full_Package.zip"
     dest: /tmp/joomla.zip
+    mode: "0664"
 
 - name: Extract Joomla
   ansible.builtin.unarchive:
     src: /tmp/joomla.zip
     dest: "{{ joomla_install_dir }}"
-    remote_src: yes
+    remote_src: true
     owner: www-data
     group: www-data
 

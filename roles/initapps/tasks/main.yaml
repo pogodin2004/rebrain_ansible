@@ -11,7 +11,7 @@
   ansible.builtin.file:
     path: "{{ joomla_install_dir }}"
     state: directory
-    recurse: yes
+    recurse: true
     owner: www-data
     group: www-data
     mode: '0755'

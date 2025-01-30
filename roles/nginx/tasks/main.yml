@@ -3,14 +3,15 @@
   ansible.builtin.apt:
     name: nginx
     state: present
-    update_cache: yes
-  notify: restart nginx
+    update_cache: true
+  notify: Restart nginx
 
 - name: Deploy Nginx config
   ansible.builtin.template:
     src: joomla.conf.j2
     dest: "{{ nginx_conf_path }}"
-  notify: reload nginx
+    mode: "0644"
+  notify: Reload nginx
 
 - name: Enable site configuration
   ansible.builtin.file:

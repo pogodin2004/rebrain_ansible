@@ -1,28 +1,32 @@
 ---
 - name: Set MySQL root password via debconf
-  ansible.builtin.shell: |
+  # noqa no-changed-when
+  ansible.builtin.shell:
+    cmd: |
     echo "mysql-server mysql-server/root_password password {{ mysql_root_password }}" | debconf-set-selections
     echo "mysql-server mysql-server/root_password_again password {{ mysql_root_password }}" | debconf-set-selections
-  become: yes
+    executable: /bin/bash
+  become: true
   no_log: true
   
-- name: Install MySQL Server
+- name: Install MySQL Python module
+  # noqa package-latest
   ansible.builtin.apt:
-    name: mysql-server
-    state: latest
-    update_cache: yes
+    name: python3-mysqldb
+    state: present
 
 - name: Install MySQL Server
+  # noqa package-latest
   ansible.builtin.apt:
     name: mysql-server
     state: latest
-  notify: restart mysql
+  notify: Restart mysql
 
 - name: Ensure MySQL is started and enabled
   ansible.builtin.service:
     name: mysql
     state: started
-    enabled: yes
+    enabled: true
 
 - name: Create MySQL User
   mysql_user:
